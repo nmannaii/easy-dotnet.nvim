@@ -18,7 +18,10 @@ return function(params, response, throw, validate)
     return
   end
 
-  dap.run({ type = constants.debug_adapter_name, name = constants.debug_adapter_name, request = "attach", host = host, port = port, console = options.console }, { new = true })
+  local active_project = require("easy-dotnet.active-project").get()
+  local session_name = params.projectName or active_project.projectName or constants.debug_adapter_name
+
+  dap.run({ type = constants.debug_adapter_name, name = session_name, request = "attach", host = host, port = port, console = options.console }, { new = true })
 
   local session = dap.session()
   if not session then
